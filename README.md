@@ -1,42 +1,48 @@
 # VeriFoto MVP
 
-Prototipo web hecho con Next.js para demostrar una idea de producto:
+VeriFoto pasó de demo visual a un MVP más realista en navegador.
 
-- captura verificable con evidencia de origen
-- certificado de autenticidad con hash y firma demo
-- análisis de imágenes subidas con estados entendibles
-- enfoque honesto: evidencia fuerte, no "certeza absoluta"
+## Qué hace ahora
 
-## Qué incluye este prototipo
+- abre la cámara del navegador cuando está disponible
+- permite tomar una foto real desde la app
+- permite elegir una imagen desde el dispositivo
+- calcula **hash SHA-256 real** del archivo
+- genera un certificado local con:
+  - id
+  - fecha/hora
+  - dispositivo
+  - firma derivada
+  - ubicación opcional
+  - nota
+- guarda certificados en **localStorage**
+- verifica imágenes por **coincidencia real de hash** contra capturas registradas en ese mismo dispositivo
 
-Pantallas implementadas:
+## Qué NO hace todavía
 
-1. **Hero / propuesta de valor**
-2. **Captura verificable**
-   - nota de captura
-   - ubicación opcional
-   - generación demo de certificado
-3. **Verificación y análisis**
-   - carga de imagen
-   - estados de resultado
-   - señales técnicas simuladas
-4. **Arquitectura MVP + fases**
+- no tiene backend
+- no comparte certificados entre dispositivos
+- no hace análisis forense profundo real
+- no puede asegurar si una foto externa es real o IA si nunca fue registrada antes
 
-## Demo del análisis
+Eso es intencional: en ese caso responde **“sin prueba de origen”**, que es mucho más honesto.
 
-El flujo de análisis usa heurísticas simples basadas en el nombre del archivo para simular estados:
+## Flujo correcto de uso
 
-- `foto-proof.jpg` → verificada
-- `retrato-ai.png` → posible IA
-- `producto-editado.jpg` → posible edición
-- cualquier otro nombre → sin prueba de origen
+1. abrir la app
+2. registrar una captura desde cámara o elegir una imagen
+3. guardar el certificado
+4. luego subir esa misma imagen en la sección de verificación
+5. la app compara el hash y, si coincide, la marca como **verificada**
 
 ## Stack
 
 - Next.js
 - React
 - Tailwind CSS
-- Web Crypto API para hash demo SHA-256
+- Web Crypto API
+- localStorage para persistencia local del MVP
+- getUserMedia para acceso a cámara en navegador
 
 ## Ejecutar
 
@@ -51,10 +57,12 @@ Abrir en:
 http://localhost:3000
 ```
 
-## Próximos pasos recomendados
+## Próximo paso recomendado
 
-- persistir certificados en Supabase/Postgres
-- registrar dispositivos/usuarios
-- agregar endpoint real de verificación por hash
-- generar exportación PDF del certificado
-- integrar análisis real de metadatos y scoring heurístico
+La siguiente versión seria es conectar:
+
+- Supabase/Postgres para persistencia real
+- storage para imágenes y certificados
+- auth por usuario/dispositivo
+- verificación por hash desde cualquier equipo
+- análisis técnico más fuerte de metadatos y señales de edición
